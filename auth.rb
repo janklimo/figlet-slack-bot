@@ -17,10 +17,6 @@ if missing_params.any?
   raise "Missing Slack config variables: #{error_msg}"
 end
 
-# Set the OAuth scope of your bot. We're just using `bot` for this demo, as it has access to
-# all the things we'll need to access. See: https://api.slack.com/docs/oauth-scopes for more info.
-BOT_SCOPE = 'bot'
-
 # This hash will contain all the info for each authed team, as well as each team's Slack client object.
 # In a production environment, you may want to move some of this into a real data store.
 $teams = {}
@@ -39,14 +35,6 @@ end
 # that they want to grant our bot access to their team.
 # See https://api.slack.com/docs/oauth for more information.
 class Auth < Sinatra::Base
-  # This is the HTML markup for our "Add to Slack" button.
-  # Note that we pass the `client_id`, `scope` and "redirect_uri" parameters specific to our application's configs.
-  add_to_slack_button = %(
-    <a href=\"https://slack.com/oauth/authorize?scope=#{BOT_SCOPE}&client_id=#{SLACK_CONFIG[:slack_client_id]}&redirect_uri=#{SLACK_CONFIG[:redirect_uri]}\">
-      <img alt=\"Add to Slack\" height=\"40\" width=\"139\" src=\"https://platform.slack-edge.com/img/add_to_slack.png\"/>
-    </a>
-  )
-
   # If a user tries to access the index page, redirect them to the auth start page
   get '/' do
     redirect '/begin_auth'
@@ -56,7 +44,7 @@ class Auth < Sinatra::Base
   # This page shows the user what our app would like to access and what bot user we'd like to create for their team.
   get '/begin_auth' do
     status 200
-    body add_to_slack_button
+    erb :index, locals: { config: SLACK_CONFIG }
   end
 
   # OAuth Step 2: The user has told Slack that they want to authorize our app to use their account, so
