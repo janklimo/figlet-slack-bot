@@ -1,4 +1,13 @@
 require 'dotenv/load'
+require 'sinatra/activerecord'
+require 'sinatra/base'
+require 'slack-ruby-client'
+
+# models
+current_dir = Dir.pwd
+Dir["#{current_dir}/models/*.rb"].each { |file| require file }
+
+# application modules
 require './auth'
 require './bot'
 

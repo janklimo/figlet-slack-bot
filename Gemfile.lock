@@ -30,6 +30,11 @@ GEM
     rack (2.0.5)
     rack-protection (2.0.3)
       rack
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
+    racksh (1.0.0)
+      rack (>= 1.0)
+      rack-test (>= 0.5)
     rake (12.3.1)
     sinatra (2.0.3)
       mustermann (~> 1.0)
@@ -58,10 +63,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord
   dotenv
   pg
   rack
+  racksh
   rake
   sinatra-activerecord
   slack-ruby-client (~> 0.13)

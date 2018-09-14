@@ -4,10 +4,12 @@ source 'http://rubygems.org'
 version_file = File.join(File.dirname(__FILE__), '.ruby-version')
 ruby File.read(version_file).strip
 
-gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'rake'
 gem 'rack'
 gem 'pg'
 gem 'dotenv'
 gem 'slack-ruby-client', '~> 0.13'
+
+# Rack console
+gem 'racksh'

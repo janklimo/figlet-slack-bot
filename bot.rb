@@ -1,18 +1,8 @@
-require 'sinatra/base'
-require 'slack-ruby-client'
-
 # This class contains all of the logic for loading, cloning and updating the tutorial message attachments.
 class SlackTutorial
   # Store the welcome text for use when sending and updating the tutorial messages
   def self.welcome_text
     "Welcome to Slack! We're so glad you're here.\nGet started by completing the steps below."
-  end
-
-  # Load the tutorial JSON file into a hash
-  def self.tutorial_json
-    tutorial_file = File.read('welcome.json')
-    tutorial_json = JSON.parse(tutorial_file)
-    attachments = tutorial_json["attachments"]
   end
 
   # Store the index of each tutorial section in TUTORIAL_JSON for easy reference later
@@ -172,5 +162,4 @@ class Events
       )
     end
   end
-
 end
