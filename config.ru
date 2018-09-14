@@ -2,6 +2,7 @@ require 'dotenv/load'
 require 'sinatra/activerecord'
 require 'sinatra/base'
 require 'slack-ruby-client'
+require 'figlet'
 
 # models
 current_dir = Dir.pwd

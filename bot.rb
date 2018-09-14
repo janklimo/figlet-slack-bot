@@ -1,4 +1,5 @@
-# This class contains all of the logic for loading, cloning and updating the tutorial message attachments.
+# frozen_string_literal: true
+
 class SlackTutorial
   # Store the welcome text for use when sending and updating the tutorial messages
   def self.welcome_text
@@ -30,6 +31,15 @@ end
 
 # This class contains all of the webserver logic for processing incoming requests from Slack.
 class API < Sinatra::Base
+  get '/figlet' do
+    font = Figlet::Font.new(font_path('banner'))
+    figlet = Figlet::Typesetter.new(font)
+    status 200
+    body figlet['ship it']
+      .gsub!('#', ':100:')
+      .gsub!(' ', ':white_square:')
+  end
+
   # This is the endpoint Slack will post Event data to.
   post '/events' do
     # Extract the Event payload from the request and parse the JSON

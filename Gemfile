@@ -10,6 +10,7 @@ gem 'rack'
 gem 'pg'
 gem 'dotenv'
 gem 'slack-ruby-client', '~> 0.13'
+gem 'figlet'
 
 # Rack console
 gem 'racksh'

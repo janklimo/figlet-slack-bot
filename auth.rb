@@ -1,19 +1,20 @@
+# frozen_string_literal: true
+
 SLACK_CONFIG = {
   slack_client_id: ENV['SLACK_CLIENT_ID'],
   slack_api_secret: ENV['SLACK_API_SECRET'],
   slack_redirect_uri: ENV['SLACK_REDIRECT_URI'],
   slack_verification_token: ENV['SLACK_VERIFICATION_TOKEN']
-}
+}.freeze
 
-# Check to see if the required variables listed above were provided, and raise an exception if any are missing.
-missing_params = SLACK_CONFIG.select { |key, value| value.nil? }
-if missing_params.any?
+# Quick config check
+if SLACK_CONFIG.any? { |_key, value| value.nil? }
   error_msg = missing_params.keys.join(", ").upcase
   raise "Missing Slack config variables: #{error_msg}"
 end
 
-# This hash will contain all the info for each authed team, as well as each team's Slack client object.
-# In a production environment, you may want to move some of this into a real data store.
+# This hash will contain all the info for each authed team,
+# as well as each team's Slack client object.
 $teams = {}
 
 # Since we're going to create a Slack client object for each team, this helper keeps all of that logic in one place.
@@ -23,6 +24,10 @@ def create_slack_client(slack_api_secret)
     fail 'Missing API token' unless config.token
   end
   Slack::Web::Client.new
+end
+
+def font_path(font_name)
+  File.join(File.dirname(__FILE__), 'fonts', "#{font_name}.flf")
 end
 
 # Slack uses OAuth for user authentication. This auth process is performed by exchanging a set of
