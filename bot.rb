@@ -41,6 +41,7 @@ class API < Sinatra::Base
   end
 
   post '/command' do
+    STDOUT.puts params
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
     status 200
