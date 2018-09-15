@@ -40,6 +40,15 @@ class API < Sinatra::Base
       .gsub!(' ', ':white_square:')
   end
 
+  get '/command' do
+    font = Figlet::Font.new(font_path('banner'))
+    figlet = Figlet::Typesetter.new(font)
+    status 200
+    body figlet['ship it']
+      .gsub!('#', ':100:')
+      .gsub!(' ', ':white_square:')
+  end
+
   # This is the endpoint Slack will post Event data to.
   post '/events' do
     # Extract the Event payload from the request and parse the JSON
