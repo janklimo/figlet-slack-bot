@@ -40,7 +40,7 @@ class API < Sinatra::Base
       .gsub!(' ', ':white_square:')
   end
 
-  get '/command' do
+  post '/command' do
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
     status 200
