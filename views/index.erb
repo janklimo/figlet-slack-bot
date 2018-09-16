@@ -11,14 +11,28 @@
         justify-content: center;
         height: 100%;
       }
+
+      .logo-container {
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .logo-container img {
+        width: 80%;
+        max-width: 700px;
+      }
     </style>
   </head>
-  <div class="flexbox-container">
-    <div>
-      <a href="<%= "https://slack.com/oauth/authorize?scope=bot&client_id=#{config[:slack_client_id]}&redirect_uri=#{config[:slack_redirect_uri]}" %>">
+  <body>
+    <div class="logo-container">
+      <img src="images/figlet_logo.png">
+    </div>
+    <div class="flexbox-container">
+      <a href="https://slack.com/oauth/authorize?client_id=<%= config[:slack_client_id] %>&scope=commands">
         <img alt="Add to Slack" height="40" width="139"
-          src="https://platform.slack-edge.com/img/add_to_slack.png"/>
+             src="https://platform.slack-edge.com/img/add_to_slack.png"
+             srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
       </a>
     </div>
-  </div>
+  </body>
 </html>

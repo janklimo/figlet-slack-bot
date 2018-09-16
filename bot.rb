@@ -1,47 +1,30 @@
 # frozen_string_literal: true
 
-class SlackTutorial
-  # Store the welcome text for use when sending and updating the tutorial messages
-  def self.welcome_text
-    "Welcome to Slack! We're so glad you're here.\nGet started by completing the steps below."
-  end
-
-  # Store the index of each tutorial section in TUTORIAL_JSON for easy reference later
-  def self.items
-    { reaction: 0, pin: 1, share: 2 }
-  end
-
-  # Return a new copy of tutorial_json so each user has their own instance
-  def self.new
-    self.tutorial_json.deep_dup
-  end
-
-  # This is a helper function to update the state of tutorial items
-  # in the hash shown above. When the user completes an action on the
-  # tutorial, the item's icon will be set to a green checkmark and
-  # the item's border color will be set to blue
-  def self.update_item(team_id, user_id, item_index)
-    # Update the tutorial section by replacing the empty checkbox with the green
-    # checkbox and updating the section's color to show that it's completed.
-    tutorial_item = $teams[team_id][user_id][:tutorial_content][item_index]
-    tutorial_item['text'].sub!(':white_large_square:', ':white_check_mark:')
-    tutorial_item['color'] = '#439FE0'
-  end
+def font_path(font_name)
+  File.join(File.dirname(__FILE__), 'fonts', "#{font_name}.flf")
 end
 
-# This class contains all of the webserver logic for processing incoming requests from Slack.
 class API < Sinatra::Base
-  get '/figlet' do
+  # testing only
+  get '/demo' do
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
     status 200
-    body figlet['ship it']
-      .gsub!('#', ':100:')
-      .gsub!(' ', ':white_square:')
+    body figlet[params['text']]
+      .gsub!('#', ":#{params['one']}:")
+      .gsub!(' ', ":#{params['two']}:")
   end
 
+  # production
   post '/command' do
     STDERR.puts params
+
+    # validate the request comes from Slack
+    request_data = JSON.parse(request.body.read)
+    unless SLACK_CONFIG[:slack_verification_token] == request_data['token']
+      halt 403, "Invalid Slack verification token received: #{request_data['token']}"
+    end
+
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
     status 200
@@ -52,14 +35,6 @@ class API < Sinatra::Base
 
   # This is the endpoint Slack will post Event data to.
   post '/events' do
-    # Extract the Event payload from the request and parse the JSON
-    request_data = JSON.parse(request.body.read)
-    # Check the verification token provided with the request to make sure it matches the verification token in
-    # your app's setting to confirm that the request came from Slack.
-    unless SLACK_CONFIG[:slack_verification_token] == request_data['token']
-      halt 403, "Invalid Slack verification token received: #{request_data['token']}"
-    end
-
     case request_data['type']
       # When you enter your Events webhook URL into your app's Event Subscription settings, Slack verifies the
       # URL's authenticity by sending a challenge token to your endpoint, expecting your app to echo it back.

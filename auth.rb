@@ -13,12 +13,8 @@ if SLACK_CONFIG.any? { |_key, value| value.nil? }
   raise "Missing Slack config variables: #{error_msg}"
 end
 
-# This hash will contain all the info for each authed team,
-# as well as each team's Slack client object.
-$teams = {}
-
-# Since we're going to create a Slack client object for each team, this helper keeps all of that logic in one place.
 def create_slack_client(slack_api_secret)
+  # client = Slack::Web::Client.new(token: 'local token')
   Slack.configure do |config|
     config.token = slack_api_secret
     fail 'Missing API token' unless config.token
@@ -26,23 +22,9 @@ def create_slack_client(slack_api_secret)
   Slack::Web::Client.new
 end
 
-def font_path(font_name)
-  File.join(File.dirname(__FILE__), 'fonts', "#{font_name}.flf")
-end
-
-# Slack uses OAuth for user authentication. This auth process is performed by exchanging a set of
-# keys and tokens between Slack's servers and yours. This process allows the authorizing user to confirm
-# that they want to grant our bot access to their team.
-# See https://api.slack.com/docs/oauth for more information.
 class Auth < Sinatra::Base
-  # If a user tries to access the index page, redirect them to the auth start page
+  # landing page with Add to Slack button
   get '/' do
-    redirect '/begin_auth'
-  end
-
-  # OAuth Step 1: Show the "Add to Slack" button, which links to Slack's auth request page.
-  # This page shows the user what our app would like to access and what bot user we'd like to create for their team.
-  get '/begin_auth' do
     status 200
     erb :index, locals: { config: SLACK_CONFIG }
   end
@@ -61,26 +43,21 @@ class Auth < Sinatra::Base
           code: params[:code] # (This is the OAuth code mentioned above)
         }
       )
-      # Success:
-      # Yay! Auth succeeded! Let's store the tokens and create a Slack client to use in our Events handlers.
-      # The tokens we receive are used for accessing the Web API, but this process also creates the Team's bot user and
-      # authorizes the app to access the Team's Events.
-      team_id = response['team_id']
-      $teams[team_id] = {
-        user_access_token: response['access_token'],
-        bot_user_id: response['bot']['bot_user_id'],
-        bot_access_token: response['bot']['bot_access_token']
-      }
 
-      $teams[team_id]['client'] = create_slack_client(response['bot']['bot_access_token'])
-      # Be sure to let the user know that auth succeeded.
-      status 200
-      body "Yay! Auth succeeded! You're awesome!"
+      # Success! Let's store access_token for this team
+      team_id = response['team_id']
+      access_token = response['access_token']
+
+      Team.find_or_create_by(external_id: team_id, access_token: access_token)
+
+      redirect '/yay'
     rescue Slack::Web::Api::Error => e
-      # Failure:
-      # D'oh! Let the user know that something went wrong and output the error message returned by the Slack client.
       status 403
       body "Auth failed! Reason: #{e.message}<br/>"
     end
+  end
+
+  get '/yay' do
+
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_13_144454) do
+ActiveRecord::Schema.define(version: 2018_09_15_170251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,8 +18,6 @@ ActiveRecord::Schema.define(version: 2018_09_13_144454) do
   create_table "teams", force: :cascade do |t|
     t.string "external_id", null: false
     t.string "access_token", null: false
-    t.string "bot_user_id", null: false
-    t.string "bot_access_token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["external_id"], name: "index_teams_on_external_id", unique: true
