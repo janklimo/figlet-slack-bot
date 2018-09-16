@@ -42,7 +42,7 @@ class API < Sinatra::Base
 
     # Slack expects a quick response confirmation
     status 200
-    body "Crunching emoji for you :space_invader: ..."
+    body({ text: "Crunching emoji for you :space_invader: ..." }.to_json)
 
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
