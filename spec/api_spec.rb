@@ -1,19 +1,10 @@
 require_relative './spec_helper.rb'
 
-describe Auth do
-  it 'allows accessing the home page' do
-    get '/'
-    expect(last_response).to be_ok
-  end
-
-  describe 'OAuth' do
-    before do
-      successful_hash = {
-        'team_id' => 'new team',
-        'access_token' => 'fresh token'
-      }
-      allow_any_instance_of(Slack::Web::Client).to receive(:oauth_access)
-        .and_return successful_hash
+describe API do
+  describe 'slash command' do
+    it 'test' do
+      post '/command', { token: 'test token' }.to_json
+      expect(last_response).to be_ok
     end
 
     context 'new team installation' do

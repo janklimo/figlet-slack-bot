@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'figlet'
+
 def font_path(font_name)
   File.join(File.dirname(__FILE__), 'fonts', "#{font_name}.flf")
 end
@@ -16,8 +18,22 @@ class API < Sinatra::Base
   end
 
   # production
+  # payload:
+  # {
+  #   "token"=>"o8oredactedgjqc",
+  #   "team_id"=>"T0redactedE8",
+  #   "team_domain"=>"domain",
+  #   "channel_id"=>"channel_id",
+  #   "channel_name"=>"directmessage",
+  #   "user_id"=>"U03S4redactedG",
+  #   "user_name"=>"user",
+  #   "command"=>"/figlet",
+  #   "text"=>"100",
+  #   "response_url"=>"https://hooks.slack.com/Mredactedl0xlYHx",
+  #   "trigger_id"=>"435641testtesttest3b0b0710d"
+  # }
   post '/command' do
-    STDERR.puts params
+    STDERR.puts params unless ENV['RACK_ENV'] == 'test'
 
     # validate the request comes from Slack
     request_data = JSON.parse(request.body.read)
@@ -25,12 +41,24 @@ class API < Sinatra::Base
       halt 403, "Invalid Slack verification token received: #{request_data['token']}"
     end
 
+    # Slack expects a quick response confirmation
+    status 200
+
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
-    status 200
-    body figlet['ship it']
+
+    team = Team.find_by_external_id(request_data['team_id'])
+    client = Slack::Web::Client.new(token: team.access_token)
+
+    # TODO make emoji work from input
+    text = figlet[request_data['text']]
       .gsub!('#', ':100:')
-      .gsub!(' ', ':white_square:')
+      .gsub!(' ', ':cloud:')
+
+    client.chat_postMessage(
+      channel: request_data['channel_id'],
+      text: text,
+    )
   end
 
   # This is the endpoint Slack will post Event data to.
@@ -73,7 +101,6 @@ class API < Sinatra::Base
   end
 end
 
-# This class contains all of the Event handling logic.
 class Events
   # You may notice that user and channel IDs may be found in
   # different places depending on the type of event we're receiving.

@@ -15,11 +15,6 @@ end
 
 def create_slack_client(slack_api_secret)
   # client = Slack::Web::Client.new(token: 'local token')
-  Slack.configure do |config|
-    config.token = slack_api_secret
-    fail 'Missing API token' unless config.token
-  end
-  Slack::Web::Client.new
 end
 
 class Auth < Sinatra::Base
@@ -47,7 +42,12 @@ class Auth < Sinatra::Base
       team_id = response['team_id']
       access_token = response['access_token']
 
-      Team.find_or_create_by(external_id: team_id, access_token: access_token)
+      # if it's a returning team, let's update the token instead
+      if team = Team.find_by_external_id(team_id)
+        team.update(access_token: access_token)
+      else
+        Team.create(external_id: team_id, access_token: access_token)
+      end
 
       redirect '/yay'
     rescue Slack::Web::Api::Error => e
