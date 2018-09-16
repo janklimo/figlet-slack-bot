@@ -9,7 +9,7 @@ SLACK_CONFIG = {
 
 # Quick config check
 if SLACK_CONFIG.any? { |_key, value| value.nil? }
-  error_msg = missing_params.keys.join(", ").upcase
+  error_msg = SLACK_CONFIG.select { |_k, v| v.nil? }.keys.join(", ").upcase
   raise "Missing Slack config variables: #{error_msg}"
 end
 
@@ -29,8 +29,7 @@ class Auth < Sinatra::Base
     erb :index, locals: { config: SLACK_CONFIG }
   end
 
-  # OAuth Step 2: The user has told Slack that they want to authorize our app to use their account, so
-  # Slack sends us a code which we can use to request a token for the user's account.
+  # OAuth flow
   get '/finish_auth' do
     client = Slack::Web::Client.new
     # OAuth Step 3: Success or failure

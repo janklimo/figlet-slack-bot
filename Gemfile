@@ -14,3 +14,9 @@ gem 'figlet'
 
 # Rack console
 gem 'racksh'
+
+group :test do
+  gem 'rack-test'
+  gem 'rspec'
+  gem 'webmock'
+end
