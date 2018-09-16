@@ -36,9 +36,8 @@ class API < Sinatra::Base
     STDERR.puts params unless ENV['RACK_ENV'] == 'test'
 
     # validate the request comes from Slack
-    request_data = JSON.parse(request.body.read)
-    unless SLACK_CONFIG[:slack_verification_token] == request_data['token']
-      halt 403, "Invalid Slack verification token received: #{request_data['token']}"
+    unless SLACK_CONFIG[:slack_verification_token] == params['token']
+      halt 403, "Invalid Slack verification token received: #{params['token']}"
     end
 
     # Slack expects a quick response confirmation
@@ -47,16 +46,16 @@ class API < Sinatra::Base
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
 
-    team = Team.find_by_external_id(request_data['team_id'])
+    team = Team.find_by_external_id(params['team_id'])
     client = Slack::Web::Client.new(token: team.access_token)
 
     # TODO make emoji work from input
-    text = figlet[request_data['text']]
+    text = figlet[params['text']]
       .gsub!('#', ':100:')
       .gsub!(' ', ':cloud:')
 
     client.chat_postMessage(
-      channel: request_data['channel_id'],
+      channel: params['channel_id'],
       text: text,
     )
   end
