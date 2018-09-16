@@ -40,11 +40,6 @@ class API < Sinatra::Base
       halt 403, "Invalid Slack verification token received: #{params['token']}"
     end
 
-    # Slack expects a quick response confirmation
-    status 200
-    content_type :json
-    { text: "Crunching emoji for you :space_invader: ..." }.to_json
-
     font = Figlet::Font.new(font_path('banner'))
     figlet = Figlet::Typesetter.new(font)
 
@@ -60,5 +55,10 @@ class API < Sinatra::Base
       channel: params['channel_id'],
       text: text,
     )
+
+    # Slack expects a quick response confirmation
+    status 200
+    content_type :json
+    { text: "Crunching emoji for you :space_invader: ..." }.to_json
   end
 end
