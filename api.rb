@@ -56,9 +56,6 @@ class API < Sinatra::Base
       text: text,
     )
 
-    # Slack expects a quick response confirmation
     status 200
-    content_type :json
-    { text: "Crunching emoji for you :space_invader: ..." }.to_json
   end
 end
