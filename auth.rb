@@ -13,10 +13,6 @@ if SLACK_CONFIG.any? { |_key, value| value.nil? }
   raise "Missing Slack config variables: #{error_msg}"
 end
 
-def create_slack_client(slack_api_secret)
-  # client = Slack::Web::Client.new(token: 'local token')
-end
-
 class Auth < Sinatra::Base
   # landing page with Add to Slack button
   get '/' do
