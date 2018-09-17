@@ -64,6 +64,9 @@ class EmojiMachine
     # the first emoji given becomes text body, the second one background
     emoji = text.scan(/:\w+:/).flatten
 
+    # keep the text itself only
+    text.gsub!(/:\w+:/, '')&.squish
+
     figlet[text]
       .gsub!('#', emoji[0] || FIGLET_BODY_DEFAULT)
       .gsub!(' ', emoji[1] || FIGLET_BACKGROUND_DEFAULT)
