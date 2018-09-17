@@ -4,7 +4,6 @@ require 'dotenv/load'
 require 'sinatra/activerecord'
 require 'sinatra/base'
 require 'slack-ruby-client'
-require 'json'
 
 # models
 current_dir = Dir.pwd
