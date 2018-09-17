@@ -2,10 +2,6 @@
 
 require 'figlet'
 
-def font_path(font_name)
-  File.join(File.dirname(__FILE__), 'fonts', "#{font_name}.flf")
-end
-
 class API < Sinatra::Base
   # testing only
   get '/demo' do
@@ -40,22 +36,42 @@ class API < Sinatra::Base
       halt 403, "Invalid Slack verification token received: #{params['token']}"
     end
 
-    font = Figlet::Font.new(font_path('banner'))
-    figlet = Figlet::Typesetter.new(font)
-
-    # TODO make emoji work from input
-    text = figlet[params['text']]
-      .gsub!('#', ':100:')
-      .gsub!(' ', ':cloud:')
-
     team = Team.find_by_external_id(params['team_id'])
     client = Slack::Web::Client.new(token: team.access_token)
 
     client.chat_postMessage(
       channel: params['channel_id'],
-      text: text,
+      text: EmojiMachine.new(params['text']).generate_text,
     )
 
     status 200
+  end
+end
+
+class EmojiMachine
+  attr_accessor :text, :figlet
+
+  FIGLET_BODY_DEFAULT = ':100:'
+  FIGLET_BACKGROUND_DEFAULT = ':cloud:'
+
+  def initialize(text)
+    font = Figlet::Font.new(font_path('banner'))
+    @figlet = Figlet::Typesetter.new(font)
+    @text = text
+  end
+
+  def generate_text
+    # the first emoji given becomes text body, the second one background
+    emoji = text.scan(/:\w+:/).flatten
+
+    figlet[text]
+      .gsub!('#', emoji[0] || FIGLET_BODY_DEFAULT)
+      .gsub!(' ', emoji[1] || FIGLET_BACKGROUND_DEFAULT)
+  end
+
+  private
+
+  def font_path(font_name)
+    File.join(File.dirname(__FILE__), 'fonts', "#{font_name}.flf")
   end
 end
