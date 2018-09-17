@@ -51,7 +51,7 @@ end
 class EmojiMachine
   attr_accessor :text, :figlet
 
-  FIGLET_BODY_DEFAULT = ':100:'
+  FIGLET_BODY_DEFAULT = ':smile:'
   FIGLET_BACKGROUND_DEFAULT = ':cloud:'
 
   def initialize(text)
