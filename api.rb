@@ -65,7 +65,8 @@ class EmojiMachine
     emoji = text.scan(/:\w+:/).flatten
 
     # keep the text itself only
-    text.gsub!(/:\w+:/, '')&.squish
+    text.gsub!(/:\w+:/, '')
+    text.squish!
 
     figlet[text]
       .gsub!('#', emoji[0] || FIGLET_BODY_DEFAULT)
