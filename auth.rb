@@ -45,7 +45,7 @@ class Auth < Sinatra::Base
         Team.create(external_id: team_id, access_token: access_token)
       end
 
-      redirect '/yay'
+      redirect "/yay?team_name=#{params['team_name']}"
     rescue Slack::Web::Api::Error => e
       status 403
       body "Auth failed! Reason: #{e.message}<br/>"
@@ -53,6 +53,7 @@ class Auth < Sinatra::Base
   end
 
   get '/yay' do
-
+    status 200
+    erb :yay, locals: { team_name: params['team_name'] }
   end
 end

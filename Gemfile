@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 version_file = File.join(File.dirname(__FILE__), '.ruby-version')
 ruby File.read(version_file).strip
 
+gem 'thin'
 gem 'sinatra-activerecord'
 gem 'rake'
 gem 'rack'
