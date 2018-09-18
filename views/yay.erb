@@ -6,16 +6,20 @@
     <%= erb :styles %>
   </head>
   <body>
-    <div class="logo-container">
-      <img src="images/epic.gif">
-    </div>
+    <%= erb :jumbotron, locals: { src: 'images/epic.gif' } %>
+
     <div class="container">
       <div class="row">
-        <div class="col-sm-12">
-          <h2>Figlet is now enabled for <%= team_name %>!</h2>
-          <p>Some normal text goes here</p>
+        <div class="col-12 center">
+          <h1 class="tagline">
+            Figlet is now enabled for <%= team_name  %> 💯
+          </h1>
         </div>
       </div>
+
+      <%= erb :use_it, locals: { headline: 'How to use it' } %>
+
+      <%= erb :about %>
     </div>
   </body>
 </html>
