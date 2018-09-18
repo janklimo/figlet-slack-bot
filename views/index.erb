@@ -6,24 +6,37 @@
     <%= erb :styles %>
   </head>
   <body>
-    <div class="logo-container">
-      <img src="images/figlet_logo.png">
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 center">
+            <img src="images/figlet_logo.png">
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="container">
       <div class="row">
         <div class="col-12 center">
           <h1 class="tagline">
-            A
-            <span class="slack"><%= erb :slack %></span> bot for getting <br />
-            your point across with style
+            A <span class="slack"><%= erb :slack %></span> bot for getting <br />
+            your point across with style &nbsp; 😎
           </h1>
         </div>
       </div>
 
       <div class="row">
+        <div class="col-4 hidden-sm"></div>
+        <div class="col-4">
+          <div class="line"></div>
+        </div>
+        <div class="col-4 hidden-sm"></div>
+      </div>
+
+      <div class="row">
         <div class="col-12">
-          <h2>Step 1: Add it</h2>
+          <h3>Step 1: Add it</h3>
           <a href="https://slack.com/oauth/authorize?client_id=<%= config[:slack_client_id] %>&scope=commands,chat:write:bot">
             <img alt="Add to Slack" height="40" width="139"
                  src="https://platform.slack-edge.com/img/add_to_slack.png"
@@ -34,13 +47,14 @@
 
       <div class="row">
         <div class="col-12">
-          <h2>Step 2: Use it</h2>
+          <h3>Step 2: Use it</h3>
+          <p>A lot of elegant slim text goes here.</p>
         </div>
       </div>
 
       <div class="row">
         <div class="col-12">
-          <h2>Figlet?</h2>
+          <h3>Figlet?</h3>
         </div>
       </div>
     </div>
