@@ -38,7 +38,7 @@ class API < Sinatra::Base
 
     if params['text'].squish == 'help'
       status 200
-      return 'Need help? No worries :hugging_face: Visit https://figlet.fun/help' \
+      return 'Need help? No worries :hugging_face: Visit https://figlet.fun/help ' \
         'to learn everything about using Figlet with Slack!'
     end
 
