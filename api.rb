@@ -66,10 +66,11 @@ class EmojiMachine
 
   def generate_text
     # the first emoji given becomes text body, the second one background
-    emoji = text.scan(/:\w+:/).flatten
+    regex = /:[\w-]+:/
+    emoji = text.scan(regex).flatten
 
     # keep the text itself only
-    text.gsub!(/:[\w-]+:/, '')
+    text.gsub!(regex, '')
     text.squish!
 
     figlet[text]
