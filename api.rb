@@ -49,7 +49,7 @@ class API < Sinatra::Base
     # user forgot to provide text
     if machine.text.blank?
       status 200
-      return 'Oops! That command did not contain any text :sweat_smile:' \
+      return 'Oops! That command did not contain any text :sweat_smile: ' \
         'Visit https://figlet.fun/help to learn everything about ' \
         'using Figlet with Slack!'
     end
