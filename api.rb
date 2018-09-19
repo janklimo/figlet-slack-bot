@@ -50,6 +50,10 @@ class API < Sinatra::Base
   get '/privacy' do
     erb :privacy
   end
+
+  get '/help' do
+    erb :help
+  end
 end
 
 class EmojiMachine
