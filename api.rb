@@ -36,6 +36,12 @@ class API < Sinatra::Base
       halt 403, "Invalid Slack verification token received: #{params['token']}"
     end
 
+    if params['text'].squish == 'help'
+      status 200
+      return 'Need help? No worries :hugging_face: Visit https://figlet.fun/help' \
+        'to learn everything about using Figlet with Slack!'
+    end
+
     team = Team.find_by_external_id(params['team_id'])
     client = Slack::Web::Client.new(token: team.access_token)
 
