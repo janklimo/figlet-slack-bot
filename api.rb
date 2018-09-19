@@ -46,6 +46,10 @@ class API < Sinatra::Base
 
     status 200
   end
+
+  get '/privacy' do
+    erb :privacy
+  end
 end
 
 class EmojiMachine
@@ -65,7 +69,7 @@ class EmojiMachine
     emoji = text.scan(/:\w+:/).flatten
 
     # keep the text itself only
-    text.gsub!(/:\w+:/, '')
+    text.gsub!(/:[\w-]+:/, '')
     text.squish!
 
     figlet[text]
