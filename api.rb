@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'figlet'
+require_relative './emoji_machine'
 
 class API < Sinatra::Base
   # testing only
@@ -36,10 +37,21 @@ class API < Sinatra::Base
       halt 403, "Invalid Slack verification token received: #{params['token']}"
     end
 
+    # help command
     if params['text'].squish == 'help'
       status 200
       return 'Need help? No worries :hugging_face: Visit https://figlet.fun/help ' \
         'to learn everything about using Figlet with Slack!'
+    end
+
+    machine = EmojiMachine.new(params['text'])
+
+    # user forgot to provide text
+    if machine.text.blank?
+      status 200
+      return 'Oops! That command did not contain any text :sweat_smile:' \
+        'Visit https://figlet.fun/help to learn everything about ' \
+        'using Figlet with Slack!'
     end
 
     team = Team.find_by_external_id(params['team_id'])
@@ -47,7 +59,7 @@ class API < Sinatra::Base
 
     client.chat_postMessage(
       channel: params['channel_id'],
-      text: EmojiMachine.new(params['text']).generate_text,
+      text: machine.generate_text
     )
 
     status 200
@@ -59,38 +71,5 @@ class API < Sinatra::Base
 
   get '/help' do
     erb :help
-  end
-end
-
-class EmojiMachine
-  attr_accessor :text, :figlet
-
-  FIGLET_BODY_DEFAULT = ':smile:'
-  FIGLET_BACKGROUND_DEFAULT = ':cloud:'
-
-  def initialize(text)
-    font = Figlet::Font.new(font_path('banner'))
-    @figlet = Figlet::Typesetter.new(font)
-    @text = text
-  end
-
-  def generate_text
-    # the first emoji given becomes text body, the second one background
-    regex = /:[\w-]+:/
-    emoji = text.scan(regex).flatten
-
-    # keep the text itself only
-    text.gsub!(regex, '')
-    text.squish!
-
-    figlet[text]
-      .gsub!('#', emoji[0] || FIGLET_BODY_DEFAULT)
-      .gsub!(' ', emoji[1] || FIGLET_BACKGROUND_DEFAULT)
-  end
-
-  private
-
-  def font_path(font_name)
-    File.join(File.dirname(__FILE__), 'fonts', "#{font_name}.flf")
   end
 end
