@@ -20,12 +20,11 @@ class EmojiMachine
   end
 
   def text
-    text_dup = text_input.dup
-
-    # keep the text itself only
-    text_dup.gsub!(REGEX, '')
-    text_dup.squish!
-    text_dup
+    text_input.dup.tap do |t|
+      # keep the text only by removing all emoji
+      t.gsub!(REGEX, '')
+      t.squish!
+    end
   end
 
   def emoji
