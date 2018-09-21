@@ -12,7 +12,6 @@ gem 'pg'
 gem 'dotenv'
 gem 'slack-ruby-client', '~> 0.13'
 gem 'figlet'
-gem 'newrelic_rpm'
 
 # Rack console
 gem 'racksh'
