@@ -4,6 +4,7 @@ require 'dotenv/load'
 require 'sinatra/activerecord'
 require 'sinatra/base'
 require 'slack-ruby-client'
+require 'newrelic_rpm'
 
 # models
 current_dir = Dir.pwd
