@@ -9,7 +9,9 @@ describe API do
         with(body: hash_including(channel: 'social', token: 'test token'))
       post '/command', { token: 'test token', team_id: 'new team',
                          text: 'hello', channel_id: 'social'}
+      # empty 200 response
       expect(last_response).to be_ok
+      expect(last_response.header['Content-Length']).to eq '0'
     end
 
     it 'handles texts with emoji included' do
@@ -19,7 +21,9 @@ describe API do
         with(body: hash_including(channel: 'social', token: 'test token'))
       post '/command', { token: 'test token', team_id: 'new team',
                          text: 'hello :100: :rocket:', channel_id: 'social'}
+      # empty 200 response
       expect(last_response).to be_ok
+      expect(last_response.header['Content-Length']).to eq '0'
     end
 
     it 'understands help command' do

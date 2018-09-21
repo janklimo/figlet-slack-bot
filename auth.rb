@@ -37,15 +37,16 @@ class Auth < Sinatra::Base
       # Success! Let's store access_token for this team
       team_id = response['team_id']
       access_token = response['access_token']
+      team_name = response['team_name']
 
       # if it's a returning team, let's update the token instead
       if team = Team.find_by_external_id(team_id)
-        team.update(access_token: access_token)
+        team.update(access_token: access_token, name: team_name)
       else
-        Team.create(external_id: team_id, access_token: access_token)
+        Team.create(external_id: team_id, access_token: access_token, name: team_name)
       end
 
-      redirect "/yay?team_name=#{response['team_name']}"
+      redirect "/yay?team_name=#{team_name}"
     rescue Slack::Web::Api::Error => e
       status 403
       body "Auth failed! Reason: #{e.message}<br/>"
