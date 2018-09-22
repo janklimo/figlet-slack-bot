@@ -34,6 +34,8 @@ class Auth < Sinatra::Base
         }
       )
 
+      STDERR.puts response unless ENV['RACK_ENV'] == 'test'
+
       # Success! Let's store access_token for this team
       team_id = response['team_id']
       access_token = response['access_token']
