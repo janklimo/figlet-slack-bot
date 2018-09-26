@@ -63,6 +63,10 @@ class API < Sinatra::Base
     )
 
     status 200
+  rescue Slack::Web::Api::Errors::SlackError
+    status 200
+    "We're sorry, #{params['user_name']}, we can't post to direct messages yet 😅. " \
+      "We're busy working on a fix!"
   end
 
   get '/privacy' do

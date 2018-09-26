@@ -47,5 +47,17 @@ describe API do
       expect(last_response).to be_ok
       expect(last_response.body).to include 'did not contain any text'
     end
+
+    it 'responds with something helpful when failing to post to a DM' do
+      Team.create(external_id: 'new team', access_token: 'test token')
+
+      stub_request(:post, "https://slack.com/api/chat.postMessage")
+        .to_raise Slack::Web::Api::Errors::SlackError
+      post '/command', { token: 'test token', user_name: 'jan',
+                         team_id: 'new team', text: 'this is ok',
+                         channel_id: 'social'}
+      expect(last_response).to be_ok
+      expect(last_response.body).to include "sorry, jan, we can't"
+    end
   end
 end
