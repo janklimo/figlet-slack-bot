@@ -8,14 +8,14 @@ class EmojiMachine
   REGEX = /:[\w-]+:/
 
   def initialize(text)
-    font = Figlet::Font.new(font_path('banner'))
+    font = Figlet::Font.new(font_path('alphabet'))
     @figlet = Figlet::Typesetter.new(font)
     @text_input = text
   end
 
   def generate_text
     figlet[text]
-      .gsub!('#', emoji[0] || FIGLET_BODY_DEFAULT)
+      .gsub!(/\w/, emoji[0] || FIGLET_BODY_DEFAULT)
       .gsub!(' ', emoji[1] || FIGLET_BACKGROUND_DEFAULT)
   end
 
