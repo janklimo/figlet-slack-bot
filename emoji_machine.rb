@@ -8,7 +8,7 @@ class EmojiMachine
   REGEX = /:[\w-]+:/
 
   def initialize(text)
-    font = Figlet::Font.new(font_path('letters'))
+    font = Figlet::Font.new(font_path('3x5'))
     @figlet = Figlet::Typesetter.new(font)
     @text_input = text
   end
