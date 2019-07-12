@@ -15,7 +15,7 @@ class EmojiMachine
 
   def generate_text
     figlet[text]
-      .gsub!(/\w/, emoji[0] || FIGLET_BODY_DEFAULT)
+      .gsub!('#', emoji[0] || FIGLET_BODY_DEFAULT)
       .gsub!(' ', emoji[1] || FIGLET_BACKGROUND_DEFAULT)
   end
 
